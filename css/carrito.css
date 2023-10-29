@@ -1,0 +1,100 @@
+.carrito{
+    padding-top: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.carrito-productos{
+    
+    width: 95%;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+
+
+.carrito-tarjeta{
+    background-color: rgb(35, 35, 35);
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px 10px 15px;
+    height: max-content;
+    border-radius: 5px;
+}
+.carrito-tarjeta h3,h4,p{
+    margin: 0;
+}
+
+.carrito-info-producto{
+    width: 500px;
+}
+.carrito-cantidades{
+    width: 200px;
+}
+
+.carrito-botones{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    
+}
+.carrito-botones button{
+    padding: 0;
+    margin: 0;
+    background-color: rgba(240, 248, 255, 0);
+    border: none;
+    cursor: pointer;
+}
+
+.carrito-botones img{
+    width: 30px;
+    height: 30px;
+}
+.carrito-total{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:5%;
+    background-color: rgb(59, 162, 128);
+    width: 95%;
+    height: 50px;
+    border-radius: 5px;
+    position: relative;
+    
+}
+
+.carrito-total button{
+    padding: 10px;
+    width: 150px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.carrito-total p{
+    position: absolute;
+    right: 50px;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(35, 35, 35);
+}
+
+.hidden{
+    visibility: hidden;
+}
