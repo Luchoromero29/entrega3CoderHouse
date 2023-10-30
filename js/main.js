@@ -44,18 +44,7 @@ const productos = [
 let productosCarrito = [];
 
 
-//recuperamos el carrito o lo inicializamos vacio
-const carrito = () => {
-    productosCarrito = JSON.parse(localStorage.getItem("carrito")) || localStorage.setItem("carrito", JSON.stringify([]));
 
-    //incrementamos contador de carrito
-    let cantidadTotal = 0
-    productosCarrito.forEach(producto => {
-        cantidadTotal+=producto.cantidad
-    });
-    const contador = document.getElementById("header-contador");
-    contador.innerHTML = cantidadTotal || "0"
-}
 
 //localStorage.clear();
 
@@ -64,8 +53,16 @@ const carrito = () => {
 document.addEventListener('DOMContentLoaded', () => {
     busqueda(document.getElementById("buscador"))
     carrito();
+    calculoDineroTotal();
+
+    let logo = document.getElementById("header-logo")
+    console.log(logo);
+    logo.addEventListener("click",busqueda(document.getElementById("buscador")))
+
 
 })
+
+
 
 //le agregamos el evento click a cada boton de agregar al acarrito de la busqueda
 const agregarEventos = () => {
@@ -76,10 +73,42 @@ const agregarEventos = () => {
     //recorro el array de botones y agrego los eventos
     buttonAgregar.forEach(button => {
         button.addEventListener("click", () => agregarAlCarrito(button.parentElement))
-    });
+    });    
 
     let buttonBorrarCarrito = document.getElementById("carrito-borrar")
-    buttonBorrarCarrito.addEventListener("click",() => limpiarCarrito());
+    buttonBorrarCarrito.addEventListener("click", () => limpiarCarrito());
+}
+//recuperamos el carrito o lo inicializamos vacio
+const carrito = () => {
+    productosCarrito = JSON.parse(localStorage.getItem("carrito")) || localStorage.setItem("carrito", JSON.stringify([]));
+
+    //incrementamos contador de carrito
+    let cantidadTotal = 0
+    productosCarrito.forEach(producto => {
+        cantidadTotal += producto.cantidad
+    });
+    const contador = document.getElementById("header-contador");
+    contador.innerHTML = cantidadTotal || "0"
+}
+
+const calculoDineroTotal = () => {
+    let dineroTotal = 0;
+    if (productosCarrito.length !== 0) {
+        productosCarrito.forEach(producto => {
+            dineroTotal += producto.precio * producto.cantidad;
+        });
+    }
+    document.getElementById("carrito-precio-total").innerHTML = `TOTAL :   $${dineroTotal} ARS`
+}
+//limpiamos resultados anteriores para no acumular busquedas
+function limpiarResultados() {
+    let lista = document.getElementById("productos")
+    lista.innerHTML = '';
+    let carritoProductos = document.getElementsByClassName("carrito-productos")
+    carritoProductos.innerHTML = "";
+    let carrito = document.getElementById("carrito")
+    carrito.setAttribute("class", "hidden");
+
 }
 
 function agregarAlCarrito(tarjetaProducto) {
@@ -89,12 +118,7 @@ function agregarAlCarrito(tarjetaProducto) {
 
     //creo un nuevo pproducto que va a ser el que se agreugue al carrito con la propiedad cantidad
     const productoCarrito = {
-        id: producto.id,
-        tipo: producto.tipo,
-        marca: producto.marca,
-        modelo: producto.modelo,
-        precio: producto.precio,
-        descripcion: producto.descripcion,
+        ...producto,
         cantidad: 0
     }
 
@@ -113,14 +137,12 @@ function agregarAlCarrito(tarjetaProducto) {
 
     //contamos cantidad total de productos
     let cantidadTotal = 0
-    productosCarrito.forEach(producto => {
-        cantidadTotal+=producto.cantidad
+    productosCarrito.map(producto => {
+        cantidadTotal += producto.cantidad
     });
 
     //actualizamos contador carrito
-    const contador = document.getElementById("header-contador");
-    contador.innerHTML = cantidadTotal
-
+    document.getElementById("header-contador").innerHTML = cantidadTotal;
 }
 
 
@@ -140,6 +162,7 @@ function busquedaEnCarrito(productoCarrito) {
 //busqueda para productos
 function busqueda(busqueda) {
 
+    
     busqueda = busqueda.value;
     limpiarResultados();
     //caso vacio
@@ -166,16 +189,7 @@ function busqueda(busqueda) {
 
 }
 
-//limpiamos resultados anteriores para no acumular busquedas
-function limpiarResultados() {
-    let lista = document.getElementById("productos")
-    lista.innerHTML = '';
-    let carritoProductos = document.getElementsByClassName("carrito-productos")
-    carritoProductos.innerHTML = "";
-    let carrito = document.getElementById("carrito")
-    carrito.setAttribute("class", "hidden");
 
-}
 
 //creamos la tarjeta de cada producto de la busqueda
 function crearTarjeta(producto) {
@@ -245,10 +259,10 @@ const crearTarjetaCarrito = () => {
     //actualizo contador del carrito
     let cantidadTotal = 0
     productosCarrito.forEach(producto => {
-        cantidadTotal+=producto.cantidad
+        cantidadTotal += producto.cantidad
     });
-    const contador = document.getElementById("header-contador");
-    contador.innerHTML = cantidadTotal|| "0"
+    document.getElementById("header-contador").innerHTML = cantidadTotal || "0";
+    
 
     //traigo la seccion de productos y creo las tarjetas de los productos
     let carritoProductos = document.getElementById("carrito-productos")
@@ -284,20 +298,17 @@ const crearTarjetaCarrito = () => {
             carritoProductos.append(tarjetaCarrito);
         });
 
-        //cargamos los eventos de los botones
-        let buttonEliminarProducto = document.querySelectorAll(".button-eliminarProducto")
-        let buttonAgregarProducto = document.querySelectorAll(".button-sumarProducto")
-
-        //recorro todos los botones para asignar los eventos
-        buttonEliminarProducto.forEach(button => {
-            button.addEventListener("click", () => eliminarProducto(button.parentElement.parentElement))
-        });
-        buttonAgregarProducto.forEach(button => {
-            button.addEventListener("click", () => agregarProducto(button.parentElement.parentElement))
-        });
-        calculoDineroTotal();
+            //cargamos los eventos de los botones
+       let buttonEliminarProducto = document.querySelectorAll(".button-eliminarProducto")
+       let buttonAgregarProducto = document.querySelectorAll(".button-sumarProducto")
+   
+       //recorro todos los botones para asignar los eventos
+       for (let i=0 ; i < buttonAgregarProducto.length ; i++){
+           buttonEliminarProducto[i].addEventListener("click", () => eliminarProducto(buttonAgregarProducto[i].parentElement.parentElement))
+           buttonAgregarProducto[i].addEventListener("click", () => agregarProducto(buttonAgregarProducto[i].parentElement.parentElement))
+       }
+       calculoDineroTotal();
         
-
     }
 }
 //elimina un producto del carrito
@@ -317,6 +328,7 @@ const eliminarProducto = (tarjetaProducto) => {
     //actualiza el local storage
     localStorage.setItem("carrito", JSON.stringify(productosCarrito));
     crearTarjetaCarrito();
+    calculoDineroTotal();
 }
 
 //metodo que suma mas productos iguales
@@ -330,25 +342,12 @@ const agregarProducto = (tarjetaProducto) => {
     //actualiza el localStorage
     localStorage.setItem("carrito", JSON.stringify(productosCarrito));
     crearTarjetaCarrito();
+    calculoDineroTotal();
 }
 
 const limpiarCarrito = () => {
     productosCarrito = [];
-    localStorage.setItem("carrito",JSON.stringify(productosCarrito))
+    localStorage.setItem("carrito", JSON.stringify(productosCarrito))
     crearTarjetaCarrito();
 }
 
-const calculoDineroTotal = () => {
-    let dineroTotal = 0;
-    productosCarrito.forEach(producto => {
-        dineroTotal += producto.precio * producto.cantidad;
-    });
-    console.log("entre aca");
-    console.log(productosCarrito);
-        if(productosCarrito.length === 0){
-            dineroTotal = 0
-        }
-            
-
-        document.getElementById("carrito-precio-total").innerHTML = `TOTAL :   $${dineroTotal} ARS`
-}
