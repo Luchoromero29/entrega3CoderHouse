@@ -55,11 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     carrito();
     calculoDineroTotal();
 
-    let logo = document.getElementById("header-logo")
-    console.log(logo);
-    logo.addEventListener("click",busqueda(document.getElementById("buscador")))
-
-
 })
 
 
