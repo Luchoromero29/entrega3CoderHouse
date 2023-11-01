@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     busqueda(document.getElementById("buscador"))
     carrito();
     calculoDineroTotal();
-
 })
 
 
@@ -72,6 +71,10 @@ const agregarEventos = () => {
 
     let buttonBorrarCarrito = document.getElementById("carrito-borrar")
     buttonBorrarCarrito.addEventListener("click", () => limpiarCarrito());
+
+    const button = document.getElementById("carrito-pagar")
+    button.addEventListener("click", () => {pagarCarrito()}) 
+
 }
 //recuperamos el carrito o lo inicializamos vacio
 const carrito = () => {
@@ -94,6 +97,7 @@ const calculoDineroTotal = () => {
         });
     }
     document.getElementById("carrito-precio-total").innerHTML = `TOTAL :   $${dineroTotal} ARS`
+    return dineroTotal;
 }
 //limpiamos resultados anteriores para no acumular busquedas
 function limpiarResultados() {
@@ -138,6 +142,13 @@ function agregarAlCarrito(tarjetaProducto) {
 
     //actualizamos contador carrito
     document.getElementById("header-contador").innerHTML = cantidadTotal;
+
+    Swal.fire({
+        icon: 'success',
+        text: 'Agregado al carrito',
+        showConfirmButton: false,
+        timer: 1000
+      })
 }
 
 
@@ -345,4 +356,27 @@ const limpiarCarrito = () => {
     localStorage.setItem("carrito", JSON.stringify(productosCarrito))
     crearTarjetaCarrito();
 }
+
+const pagarCarrito = () => {
+    if(calculoDineroTotal() == 0){
+        Swal.fire({
+            icon: 'error',
+            title: 'No has agregado nada al carrito',
+            showConfirmButton: false,
+            timer: 1500
+            
+          })
+    }else{
+        limpiarCarrito();
+        Swal.fire({
+            icon: 'success',
+            title: 'Has pagado con exito',
+            showConfirmButton: false,
+            timer: 1500
+          })
+
+    }
+
+}
+
 
